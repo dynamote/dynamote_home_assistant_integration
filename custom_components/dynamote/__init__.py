@@ -65,10 +65,6 @@ async def ws_handle_set_dynamote_config_command(hass: HomeAssistant, connection:
 @callback
 async def handle_send_command_service(call: ServiceCall) -> None:
 
-  # TODO
-	# if resolve error, educate about MDNS setup in hass (do this in the README)
-	# mdns often fails, do it another way, or test it outside container?
-
 	#
 	# Verify that the required parameters are present in the service call
 	#
@@ -118,18 +114,17 @@ async def handle_send_command_service(call: ServiceCall) -> None:
 		_LOGGER.error("Dynamote send_command service error, the deviceName or ipAddress was not provided in the saved config or service call")
 		return
 
-	if not "cmdBytesString" in commandConfig:
-		_LOGGER.error("Dynamote send_command service error, the cmdBytesString was not provided in the saved config")
+	if not "cmd" in commandConfig:
+		_LOGGER.error("Dynamote send_command service error, the cmd was not provided in the saved config")
 		return
-	cmdBytesString = commandConfig["cmdBytesString"]
+	cmdIntList = commandConfig["cmd"]
 
 	#
-	# convert the cmdBytesString string to binary hex data
+	# convert the cmdIntList to binary data
 	#
 
-	# for example, cmdBytesString = "[18, 8, 10, 4, 116, 101, 115, 116, 18, 0]"
-	byteStrings = list(map(int, cmdBytesString.replace('[', '').replace(']', '').split(', ')))
-	hexdata = ''.join([chr(item) for item in byteStrings])
+	# for example, cmdIntList = [18, 8, 10, 4, 116, 101, 115, 116, 18, 0]
+	cmdBytes = bytes(cmdIntList)
 
 	#
 	# get the ip address for the device on the local network with the given hostname
@@ -149,9 +144,10 @@ async def handle_send_command_service(call: ServiceCall) -> None:
 	try:
 		url = 'http://' + ipAddress + '/dynamoteCmd'
 		session = async_get_clientsession(hassObj)
-		await session.post(url, data=hexdata, timeout=ClientTimeout(total=5))
-	except:
+		await session.post(url, data=cmdBytes, timeout=ClientTimeout(total=5))
+	except Exception as e:
 		_LOGGER.error("Dynamote send_command service error, failed to send command to device")
+		_LOGGER.error(e)
 		return
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
