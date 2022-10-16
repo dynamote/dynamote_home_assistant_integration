@@ -29,11 +29,19 @@ This is the third party integration for Home Assistant that enables it to commun
 
 ## Configuration
 
-Add the following line to your configuration file to enable this integration, then restart your Home Assistant server.
+Add the following line to your configuration file to enable this integration, then restart your Home Assistant server. This will add a button entity for each dynamote command.
 
 ```yaml
-dynamote:
+button:
+	- platform: dynamote
+	  name: turn_on_tv
+	  command: turn_on_tv
+	- platform: dynamote
+	  name: increase_tv_volume
+	  command: increase_tv_volume
 ```
+
+The name should be what you want the button entity to be named in Home Assistant. Command should be the command ID that you set up the command with in the dynamote app (see next section).
 
 ## Configuration
 
@@ -45,19 +53,8 @@ Connect with the IP address, port, and access token of your Home Assistant serve
 	<img src="images/hass_connection_settings_from_app.png" alt="">
 </p>
 
-Once connected, you may edit/add the available commands for Home Assistant to use. For the "IP Address", use the IP address of the Dynamote device on your local network. It is recommended that you assign a static IP to your device so that the IP remains constant and doesn't change. Once completed, press the upload button at the top of the page in the app.
+Once connected, you may edit/add the available commands for Home Assistant to use. Once completed, press the upload button at the top of the page in the app.
 
 <p align="center">
 	<img src="images/remote_command_configuration_from_app.png" alt="">
 </p>
-
-## Usage
-
-In Home Assistant, Dynamote commands are invoked with the "Dynamote.send_command" service. Fill out an action like in the following example. An IP address may be optionally specified, this will overwrite the IP address that the command was originally configured with.
-
-```yaml
-service: dynamote.send_command
-data:
-  commandId: turn_on_tv
-  ipAddress: 192.168.2.71             # optional
-```

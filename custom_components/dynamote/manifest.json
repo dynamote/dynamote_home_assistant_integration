@@ -1,11 +1,11 @@
 {
   "codeowners": ["@dynamote"],
   "config_flow": false,
-  "dependencies": [],
+  "dependencies": ["mqtt"],
   "documentation": "https://github.com/dynamote/dynamote_home_assistant_integration",
   "domain": "dynamote",
   "iot_class": "assumed_state",
   "name": "Dynamote",
   "requirements": ["websockets==10.2"],
-  "version": "1.0.1"
+  "version": "2.0.0"
 }
