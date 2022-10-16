@@ -33,12 +33,12 @@ Add the following line to your configuration file to enable this integration, th
 
 ```yaml
 button:
-	- platform: dynamote
-	  name: turn_on_tv
-	  command: turn_on_tv
-	- platform: dynamote
-	  name: increase_tv_volume
-	  command: increase_tv_volume
+  - platform: dynamote
+    name: turn_on_tv
+    command: turn_on_tv
+  - platform: dynamote
+    name: increase_tv_volume
+    command: increase_tv_volume
 ```
 
 The name should be what you want the button entity to be named in Home Assistant. Command should be the command ID that you set up the command with in the dynamote app (see next section).
