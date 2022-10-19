@@ -4,14 +4,13 @@ from typing import Callable, Optional
 from homeassistant.components.mqtt import async_publish
 from homeassistant.components.button import ButtonEntity
 from homeassistant.components.button import PLATFORM_SCHEMA
-from homeassistant.const import CONF_COMMAND, CONF_NAME
+from homeassistant.const import CONF_COMMAND
 from .const import STORAGE_VERSION, STORAGE_KEY
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType, HomeAssistantType
 from asyncio import run_coroutine_threadsafe
 
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
-import json
 import logging
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,7 +18,6 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_COMMAND): cv.string,
-        vol.Required(CONF_NAME): cv.string,
     }
 )
 
@@ -31,27 +29,26 @@ async def async_setup_platform(
     discovery_info: Optional[DiscoveryInfoType] = None,
 ) -> None:
 	"""Set up the sensor platform."""
-	async_add_entities([DynamoteSwitch(config[CONF_COMMAND], config[CONF_NAME], hass)], update_before_add=False)
+	async_add_entities([DynamoteSwitch(config[CONF_COMMAND], hass)], update_before_add=False)
 
 
 class DynamoteSwitch(ButtonEntity):
 	""" Dynamote Switch class """
 
-	def __init__(self, name: str, commandId: str, hass: HomeAssistantType):
+	def __init__(self, commandId: str, hass: HomeAssistantType):
 		super().__init__()
 		self._commandId = commandId
-		self._name = name
 		self.hass = hass
 
 	@property
 	def name(self) -> str:
 			"""Return the name of the entity."""
-			return self._name
+			return self._commandId
 
 	@property
 	def unique_id(self) -> str:
 			"""Return the unique ID of the button."""
-			return self._name
+			return self._commandId
 
 	def press(self) -> None:
 		# run async_press synchronously
@@ -71,7 +68,7 @@ class DynamoteSwitch(ButtonEntity):
 			if commandConfig['cmd']['useCustomCmd'] == True:
 				topic = commandConfig['cmd']['customCmdTopic']
 			else:
-				topic = f"cmnd/${commandConfig['topic']}/irsend"
+				topic = f"cmnd/{commandConfig['topic']}/irsend"
 		except e:
 			raise ValueError("Error, attempted to send a command with Dynamote, for a command that does exist but is not configured properly")
 

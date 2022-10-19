@@ -7,5 +7,5 @@
   "iot_class": "assumed_state",
   "name": "Dynamote",
   "requirements": ["websockets==10.2"],
-  "version": "2.0.0"
+  "version": "2.0.1"
 }
