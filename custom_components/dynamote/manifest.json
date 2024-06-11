@@ -6,6 +6,6 @@
   "domain": "dynamote",
   "iot_class": "assumed_state",
   "name": "Dynamote",
-  "requirements": ["websockets==10.2"],
+  "requirements": [],
   "version": "2.1.0"
 }
