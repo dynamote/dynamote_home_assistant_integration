@@ -11,6 +11,7 @@ from homeassistant.components.mqtt import async_publish
 from homeassistant.const import CONF_COMMAND
 from homeassistant.core import HomeAssistant
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .const import STORAGE_KEY, STORAGE_VERSION
@@ -100,7 +101,7 @@ class DynamoteSwitch(ButtonEntity):
 
     async def _getConfigForCommand(self) -> str:
         # get the saved command configs
-        store = self.hass.helpers.storage.Store(STORAGE_VERSION, STORAGE_KEY)
+        store = Store(STORAGE_VERSION, STORAGE_KEY)
         configData = await store.async_load()
 
         # verify that there is a proper config saved for this command ID

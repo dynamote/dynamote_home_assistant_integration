@@ -5,6 +5,7 @@ import voluptuous as vol
 from homeassistant.components import websocket_api
 from homeassistant.components.websocket_api.connection import ActiveConnection
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.storage import Store
 
 from .const import STORAGE_KEY, STORAGE_VERSION
 
@@ -23,7 +24,7 @@ async def ws_handle_get_dynamote_config_command(
     hass: HomeAssistant, connection: ActiveConnection, msg: dict
 ) -> None:
     """Handle get dynamote config command."""
-    store = hass.helpers.storage.Store(STORAGE_VERSION, STORAGE_KEY)
+    store = Store(STORAGE_VERSION, STORAGE_KEY)
     data = await store.async_load()
 
     if data is None:
@@ -51,7 +52,7 @@ async def ws_handle_set_dynamote_config_command(
     hass: HomeAssistant, connection: ActiveConnection, msg: dict
 ) -> None:
     """Handle set dynamote config command."""
-    store = hass.helpers.storage.Store(STORAGE_VERSION, STORAGE_KEY)
+    store = Store(STORAGE_VERSION, STORAGE_KEY)
     await store.async_save(msg["config"])
 
     connection.send_result(
