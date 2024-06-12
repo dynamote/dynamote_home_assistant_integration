@@ -101,7 +101,7 @@ class DynamoteSwitch(ButtonEntity):
 
     async def _getConfigForCommand(self) -> str:
         # get the saved command configs
-        store = Store(STORAGE_VERSION, STORAGE_KEY)
+        store = Store(self.hass, STORAGE_VERSION, STORAGE_KEY)
         configData = await store.async_load()
 
         # verify that there is a proper config saved for this command ID
