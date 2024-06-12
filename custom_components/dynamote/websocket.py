@@ -24,7 +24,7 @@ async def ws_handle_get_dynamote_config_command(
     hass: HomeAssistant, connection: ActiveConnection, msg: dict
 ) -> None:
     """Handle get dynamote config command."""
-    store = Store(STORAGE_VERSION, STORAGE_KEY)
+    store = Store(hass, STORAGE_VERSION, STORAGE_KEY)
     data = await store.async_load()
 
     if data is None:
@@ -52,7 +52,7 @@ async def ws_handle_set_dynamote_config_command(
     hass: HomeAssistant, connection: ActiveConnection, msg: dict
 ) -> None:
     """Handle set dynamote config command."""
-    store = Store(STORAGE_VERSION, STORAGE_KEY)
+    store = Store(hass, STORAGE_VERSION, STORAGE_KEY)
     await store.async_save(msg["config"])
 
     connection.send_result(
